@@ -1,25 +1,53 @@
 <% layout('layouts/boilerplate') -%>
+
 <body>
-    <h3>All Listings</h3>
-
-    <form method="get" action="/listings/new">
-        <!-- <button type="submit">Create New Listing</button> -->
-    </form>
-
-    <% for (let listing of allListings) { %>
-        <div>
-            <ul>
-                <li><strong>Title:</strong> <%= listing.title %></li>
-                <li><strong>Description:</strong> <%= listing.description %></li>
-                <li>
-                    <strong>Link:</strong> 
-                    <a href="/listings/<%= listing._id %>"><%= listing.title %></a>
-                </li>
-                <li><strong>Location:</strong> <%= listing.location %></li>
-                <li><strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %></li>
-                <li><strong>Country:</strong> <%= listing.country %></li>
-            </ul>
+    <div class="container mt-4">
+        <h3>All Listings</h3>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            <% for (let listing of allListings) { %>
+                <div class="col">
+                    <div class="card h-100">
+                        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+                            <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height: 20rem; object-fit: cover;">
+                            <div class="card-img-overlay"></div>
+                            <div class="card-body">
+                                <p class="card-text mb-1">
+                                    <b><%= listing.title %></b>
+                                </p>
+                                <p class="card-text">
+                                    ₹<%= listing.price.toLocaleString("en-IN") %>/night
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            <% } %>
         </div>
-        <hr>
-    <% } %>
+    </div>
 </body>
+
+
+    <!-- <div>
+                <ul>
+                    <li><strong>Title:</strong>
+
+                    </li>
+                    <li><strong>Description:</strong>
+                        <//%= listing.description %>
+                    </li>
+                    <li>
+                        <strong>Link:</strong>
+                        <a href="/listings/<//%= listing._id %>">
+                            <//%= listing.title %>
+                        </a>
+                    </li>
+                    <li><strong>Location:</strong>
+                        <//%= listing.location %>
+                    </li>
+                    <li><strong>Price:</strong>
+                    </li>
+                    <li><strong>Country:</strong>
+                        <//%= listing.country %>
+                    </li>
+                </ul>
+            </div> -->

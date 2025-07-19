@@ -1,37 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout("/layouts/boilerplate") %>
+    <br>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <form method="post" action="/listings">
+                <h1>Create new Listing</h1>
+                <div>
+                    <label for="title" class="form-label">Title</label>
+                    <input name="listing[title]" type="text" placeholder="Enter listing Title" class="form-control">
+                </div>
+                <div>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="listing[description]" type="text" placeholder="Enter listing description"
+                        class="form-control"></textarea>
+                </div>
+                <div>
+                    <label for="image" class="form-label">Image Link</label>
+                    <input name="listing[image][url]" type="text" placeholder="Enter listing image URL"
+                        class="form-control">
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input name="listing[price]" type="number" placeholder="Enter listing price"
+                            class="form-control">
+                    </div>
+                    <div class="col-md-8">
+                        <label for="country" class="form-label">Country</label>
+                        <input name="listing[country]" placeholder="Enter listing country" class="form-control">
+                    </div>
+                </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Listing</title>
-</head>
+                <div>
+                    <label for="location" class="form-label">Location</label>
+                    <input name="listing[location]" placeholder="Enter listing location" class="form-control">
+                </div>
+                <br>
 
-<body>
-    <form method="post" action="/listings">
-        <input name="listing[title]" type="text" placeholder="Enter listing Title">
-        <br>
-        <br>
-        <textarea name="listing[description]" type="text" placeholder="Enter listing description"></textarea>
-        <br>
-        <br>
-        <input name="listing[image][url]" type="text" placeholder="Enter listing image URL">
-        <input name="listing[image][filename]" type="text" placeholder="Enter image filename">
-
-        <br>
-        <br>
-        <input name="listing[price]" type="number" placeholder="Enter listing price">
-        <br>
-        <br>
-        <input name="listing[country]" placeholder="Enter listing country">
-        <br>
-        <br>
-        <input name="listing[location]" placeholder="Enter listing location">
-        <br>
-        <br>
-        <button>Add</button>
-
-    </form>
-</body>
-
-</html>
+                <button class="btn btn-dark add-btn">Add</button>
+                <br>
+            </form>
+        </div>
+    </div>

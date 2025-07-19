@@ -1,14 +1,24 @@
 <% layout('layouts/boilerplate') -%>
-<body>
-    <h1>Your listing is</h1>
-    <li><%= listing.title %></li>
-    <li><%= listing.description %></li>
-    <li> &#8377; <%=listing.price.toLocaleString("en-IN")%></li>
-    <li><%= listing.image.url %></li>
-    <li><%= listing.country %></li>
 
-    <a href="/listings/<%= listing._id %>/edit">Edit This Listing</a>
-    <form method="post" action="/listings/<%= listing._id%>?_method=Delete">
-        <button>Delete</button>
-    </form>
-</body>
+<br>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %> image" style="height: 25rem; object-fit: cover;">
+            <div class="card-body">
+                <h2 class="card-title"><%= listing.title %></h2>
+                <h5 class="text-muted"><%= listing.location %>, <%= listing.country %></h5>
+                <p class="card-text mt-3"><%= listing.description %></p>
+                <p class="card-text fw-bold">₹ <%= listing.price.toLocaleString("en-IN") %> / night</p>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-primary">Edit</a>
+
+                    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                        <button class="btn btn-outline-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
