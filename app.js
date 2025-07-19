@@ -46,11 +46,11 @@ app.listen(port, (req, res) => {
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
     res.render("./listings/index.ejs", { allListings });
-})
+});
 
 // read/show route
 app.get("/listings/:id", async(req,res)=>{
     let {id} = req.params;
     let item = await Listing.findById(id);
     res.render("./listings/show.ejs",{item})
-})
+});
