@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderList - Listings</title>
+</head>
+
+<body>
+    <h3>All Listings</h3>
+    <% for(let item of allListings){ %>
+        <div>
+            <li><%=item.title%></li>
+            <li><%=item.description%></li>
+            <li><a href="/listings/<%= item._id %>"><%=item.title%></a></li>
+            <li><%=item.location%></li>
+            <li> &#8377; <%=item.price.toLocaleString("en-IN")%></li>
+            <li><%=item.country%></li>
+        </div>
+        <hr>
+        <% } %>
+</body>
+
+</html>
