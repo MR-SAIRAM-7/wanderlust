@@ -1,40 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WanderList - Listings</title>
-</head>
-
+<% layout('layouts/boilerplate') -%>
 <body>
     <h3>All Listings</h3>
 
     <form method="get" action="/listings/new">
-        <button>Create new Listing</button>
+        <!-- <button type="submit">Create New Listing</button> -->
     </form>
-    
-    <% for(let item of allListings){ %>
+
+    <% for (let listing of allListings) { %>
         <div>
-            <li>
-                <%=item.title%>
-            </li>
-            <li>
-                <%=item.description%>
-            </li>
-            <li><a href="/listings/<%= item._id %>">
-                    <%=item.title%>
-                </a></li>
-            <li>
-                <%=item.location%>
-            </li>
-            <li> &#8377; <%=item.price.toLocaleString("en-IN")%></li>
-            <li>
-                <%=item.country%>
-            </li>
+            <ul>
+                <li><strong>Title:</strong> <%= listing.title %></li>
+                <li><strong>Description:</strong> <%= listing.description %></li>
+                <li>
+                    <strong>Link:</strong> 
+                    <a href="/listings/<%= listing._id %>"><%= listing.title %></a>
+                </li>
+                <li><strong>Location:</strong> <%= listing.location %></li>
+                <li><strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %></li>
+                <li><strong>Country:</strong> <%= listing.country %></li>
+            </ul>
         </div>
         <hr>
-        <% } %>
+    <% } %>
 </body>
-
-</html>
