@@ -7,10 +7,15 @@
 </head>
 <body>
     <h1>Your listing is</h1>
-    <li><%= item.title %></li>
-    <li><%= item.description %></li>
-    <li> &#8377; <%=item.price.toLocaleString("en-IN")%></li>
-    <li><%= item.image.url %></li>
-    <li><%= item.country %></li>
+    <li><%= listing.title %></li>
+    <li><%= listing.description %></li>
+    <li> &#8377; <%=listing.price.toLocaleString("en-IN")%></li>
+    <li><%= listing.image.url %></li>
+    <li><%= listing.country %></li>
+
+    <a href="/listings/<%= listing._id %>/edit">Edit This Listing</a>
+    <form method="post" action="/listings/<%= listing._id%>?_method=Delete">
+        <button>Delete</button>
+    </form>
 </body>
 </html>
