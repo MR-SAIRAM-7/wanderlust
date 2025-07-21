@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const listingSchema = require("./schema.js");
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -67,29 +68,30 @@ app.get("/listings/new", (req, res) => {
 });
 
 
-app.post("/listings", wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-        throw new ExpressError(400, "Send valid data for listing");
-    }
 
+//main route
+
+app.post("/listings", wrapAsync(async (req, res) => {
     const { listing } = req.body;
 
-    // If image URL is empty or missing, remove the image to let default apply
+
+    // if image URL is empty or missing, remove the image to let default apply
     if (!listing.image || !listing.image.url || listing.image.url.trim() === "") {
         delete listing.image;
     }
 
+    let result = listingSchema.validate(req.body);
+    if (result.error) {
+        throw new ExpressError(400, result.error.details[0].message);
+    }
     const newListing = new Listing(listing);
     await newListing.save();
-
-    // Ensure newListing._id exists and is valid
     if (!newListing._id) {
         throw new ExpressError(500, "Failed to create listing");
     }
-
     res.redirect(`/listings/${newListing._id}`);
-}));
 
+}));
 
 
 // read/show route
@@ -133,7 +135,7 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 
 
 // Catch-all for any unmatched routes
-app.all('/{*any}', (req, res, next) => {        
+app.all('/{*any}', (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
 
