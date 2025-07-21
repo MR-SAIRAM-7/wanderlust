@@ -36,6 +36,16 @@ app.get("/", (req, res) => {
     res.send(`App is listening at port : ${port}`)
 })
 
+const validateListing = (req, res, next) => {
+    let { error } = listingSchema.validate(req.body);
+    if (error) {
+        throw new ExpressError(400, error.details[0].message);
+    } else {
+        next();
+    }
+}
+
+
 // app.get("/test", async (req,res)=>{
 //     let sampleListing = new Listing({
 //         title:"My new Villa",
@@ -73,30 +83,21 @@ app.get("/listings/new", (req, res) => {
 
 app.post("/listings", wrapAsync(async (req, res) => {
     const { listing } = req.body;
-
-
-    // if image URL is empty or missing, remove the image to let default apply
-    if (!listing.image || !listing.image.url || listing.image.url.trim() === "") {
-        delete listing.image;
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        throw new ExpressError(400, error.details[0].message);
     }
-
-    let result = listingSchema.validate(req.body);
-    if (result.error) {
-        throw new ExpressError(400, result.error.details[0].message);
+    if (!listing.image || listing.image.url.trim() === "" || listing.image === null) {
+        delete listing.image;
     }
     const newListing = new Listing(listing);
     await newListing.save();
-    if (!newListing._id) {
-        throw new ExpressError(500, "Failed to create listing");
-    }
     res.redirect(`/listings/${newListing._id}`);
-
 }));
 
 
 // read/show route
-
-app.get("/listings/:id", wrapAsync(async (req, res) => {
+app.get("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     res.render("listings/show", { listing });
@@ -104,14 +105,14 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
 
 
 //edit route
-app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
+app.get("/listings/:id/edit", validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     res.render("listings/edit", { listing });
 }));
 
 //update
-app.put("/listings/:id", wrapAsync(async (req, res) => {
+app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings`);
@@ -138,6 +139,7 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 app.all('/{*any}', (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
+
 
 
 // General error handling middleware
