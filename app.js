@@ -54,41 +54,50 @@ app.listen(port, (req, res) => {
 
 
 // index route
+
 app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
-    res.render("./listings/index.ejs", { allListings });
+    res.render("listings/index", { allListings });
 }));
 
 // new (create) route
+
 app.get("/listings/new", (req, res) => {
-    res.render("./listings/new.ejs")
-})
+    res.render("listings/new");
+});
 
 
 app.post("/listings", wrapAsync(async (req, res) => {
     if (!req.body.listing) {
-        throw new ExpressError(400, "Send Valid data for listing");
+        throw new ExpressError(400, "Send valid data for listing");
     }
 
     const { listing } = req.body;
 
-    // If image URL is empty, remove the image object to trigger default
+    // If image URL is empty or missing, remove the image to let default apply
     if (!listing.image || !listing.image.url || listing.image.url.trim() === "") {
         delete listing.image;
     }
+
     const newListing = new Listing(listing);
     await newListing.save();
-    res.redirect(`/listings/${newListing._id}`);
 
-    console.log(err);
+    // Ensure newListing._id exists and is valid
+    if (!newListing._id) {
+        throw new ExpressError(500, "Failed to create listing");
+    }
+
+    res.redirect(`/listings/${newListing._id}`);
 }));
 
 
+
 // read/show route
+
 app.get("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
-    res.render("./listings/show.ejs", { listing });
+    res.render("listings/show", { listing });
 }));
 
 
@@ -113,11 +122,26 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
     res.redirect("/listings");
 }));
 
-app.all("*", (req, res, next) => {
-    next(new ExpressError(404, "Page not Found"));
-})
+// app.all("*", (req, res, next) => {
+//     next(new ExpressError(404, "Page not Found"));
+// })
 
+// app.use((err, req, res, next) => {
+//     let { statusCode = 500, message = "something went wrong" } = err;
+//     res.status(statusCode).send(message);
+// })
+
+
+// Catch-all for any unmatched routes
+app.all('/{*any}', (req, res, next) => {        
+    next(new ExpressError(404, "Page Not Found"));
+});
+
+
+// General error handling middleware
 app.use((err, req, res, next) => {
-    let { statusCode = 500, message = "something went wrong" } = err;
-    res.status(statusCode).send(message);
-})
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = "Something went wrong!";
+    res.status(statusCode).render("./listings/error.ejs", { err });
+});
+
