@@ -111,7 +111,7 @@ app.post("/listings", wrapAsync(async (req, res) => {
 // read/show route
 app.get("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
-    let listing = await Listing.findById(id);
+    let listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show", { listing });
 }));
 
@@ -137,7 +137,8 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
     res.redirect("/listings");
 }));
 
-// review route - post route
+
+// POST route for creating reviews
 app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
@@ -145,10 +146,22 @@ app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => 
     listing.reviews.push(newReview);
     await newReview.save();
     await listing.save();
-
     res.redirect(`/listings/${listing._id}`);
-
 }));
+
+// DELETE route for reviews
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+    
+    // remove review reference from listing
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    
+    // delete the actual review document
+    await Review.findByIdAndDelete(reviewId);
+    
+    res.redirect(`/listings/${id}`);
+}));
+
 
 // app.all("*", (req, res, next) => {
 //     next(new ExpressError(404, "Page not Found"));

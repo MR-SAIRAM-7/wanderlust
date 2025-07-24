@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./models/review.js");
 
 const imageSchema = new Schema({
     filename: String,
@@ -29,6 +30,14 @@ const listingSchema = new Schema({
         }
     ]
 });
+
+
+// defining a middleware to delete all the reviews of the listings if the listing is deleted
+listingSchema.post("findOneAndDelete", async (listing) => {
+    if (listing) {
+        await Review.deleteMany({ _id: { $in: listing.reviews } });
+    }
+})
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;

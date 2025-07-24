@@ -19,31 +19,66 @@
 })()
 
 
-
-// Reviews - Star Rating
-
 document.addEventListener('DOMContentLoaded', function() {
     const stars = document.querySelectorAll('.star');
     const ratingValue = document.getElementById('rating-value');
+    const form = document.querySelector('.needs-validation');
+    const starRatingContainer = document.querySelector('.star-rating');
+    const ratingFeedback = document.querySelector('.star-rating .invalid-feedback');
     let currentRating = 0;
 
     stars.forEach((star, index) => {
-        // mouse hover effects
         star.addEventListener('mouseenter', function() {
             highlightStars(index + 1);
         });
 
-        // click to select rating
         star.addEventListener('click', function() {
             currentRating = index + 1;
             ratingValue.value = currentRating;
             selectStars(currentRating);
+            
+            // Remove validation error when user selects a rating
+            starRatingContainer.classList.remove('is-invalid');
+            ratingFeedback.style.display = 'none';
         });
     });
 
-    // reset to selected rating when mouse leaves the rating area
-    document.querySelector('.star-rating').addEventListener('mouseleave', function() {
+    starRatingContainer.addEventListener('mouseleave', function() {
         selectStars(currentRating);
+    });
+
+    // Form validation
+    form.addEventListener('submit', function(event) {
+        let isValid = true;
+
+        // Check if rating is selected
+        if (currentRating === 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Show validation error for star rating
+            starRatingContainer.classList.add('is-invalid');
+            ratingFeedback.style.display = 'block';
+            
+            // Scroll to the star rating section
+            starRatingContainer.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            isValid = false;
+        }
+
+        // Check other form fields
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            isValid = false;
+        }
+
+        form.classList.add('was-validated');
+        
+        return isValid;
     });
 
     function highlightStars(rating) {
@@ -64,3 +99,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
