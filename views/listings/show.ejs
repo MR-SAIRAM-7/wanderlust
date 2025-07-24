@@ -22,8 +22,7 @@
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-primary">Edit</a>
 
-                        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE"
-                            onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
                             <button class="btn btn-outline-danger">Delete</button>
                         </form>
                     </div>
