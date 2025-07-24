@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Review = require("./models/review.js");
+const Review = require("./review.js");
 
 const imageSchema = new Schema({
     filename: String,
