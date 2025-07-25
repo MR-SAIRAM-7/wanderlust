@@ -43,7 +43,7 @@ router.post("/", isLoggedin, wrapAsync(async (req, res) => {
 // read/show route
 router.get("/:id", validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
-    let listing = await Listing.findById(id).populate("reviews").populate("owner");
+    let listing = await Listing.findById(id).populate({ path: "reviews", populate: { path: "author" } }).populate("owner");
     if (!listing) {
         req.flash("error", "Listing you requested for does not exist!");
         return res.redirect("/listings");
@@ -53,7 +53,7 @@ router.get("/:id", validateListing, wrapAsync(async (req, res) => {
 
 
 //edit route
-router.get("/:id/edit", isLoggedin,isOwner, validateListing, wrapAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedin, isOwner, validateListing, wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     req.flash("success", "Listing Edited Successfully");
@@ -61,7 +61,7 @@ router.get("/:id/edit", isLoggedin,isOwner, validateListing, wrapAsync(async (re
 }));
 
 //update
-router.put("/:id", validateListing,isOwner, wrapAsync(async (req, res) => {
+router.put("/:id", validateListing, isOwner, wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     // if(!listing.owner._id.equals(res.locals.currentUser._id)){
@@ -74,7 +74,7 @@ router.put("/:id", validateListing,isOwner, wrapAsync(async (req, res) => {
 }));
 
 //delete route
-router.delete("/:id", isLoggedin,isOwner, wrapAsync(async (req, res) => {
+router.delete("/:id", isLoggedin, isOwner, wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndDelete(id);
     req.flash("success", "Listing Deleted Succesfully");
