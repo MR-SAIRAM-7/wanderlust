@@ -14,18 +14,25 @@
                     <h5 class="text-muted">
                         <%= listing.location %>, <%= listing.country %>
                     </h5>
+
                     <p class="card-text mt-3">
                         <%= listing.description %>
                     </p>
                     <p class="card-text fw-bold">₹ <%= listing.price.toLocaleString("en-IN") %> / night</p>
+                    <h5>
+                        <i>
+                            owner : <%= listing.owner.username %>
+                        </i>
+                    </h5>
+                    <% if(currentUser && currentUser._id.equals(listing.owner._id)){ %>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-primary">Edit</a>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-primary">Edit</a>
-
-                        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-                            <button class="btn btn-outline-danger">Delete</button>
-                        </form>
-                    </div>
+                            <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                                <button class="btn btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
+                        <%} %>
                 </div>
             </div>
 
