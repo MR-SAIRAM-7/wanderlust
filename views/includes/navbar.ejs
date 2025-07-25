@@ -1,14 +1,32 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link " aria-current="page" href="/listings">Home</a>
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="/listings">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new Listing</a>
+        <% if (currentUser) { %>
+          <a class="nav-link" href="/listings/new">Add New Listing</a>
+        <% } %>
+      </div>
+
+      <div class="navbar-nav">
+        <% if (!currentUser) { %>
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/signup">Signup</a>
+        <% } else { %>
+          <span class="navbar-text mx-2">
+            Welcome, <strong><%= currentUser.username %></strong>
+          </span>
+          <form action="/logout" method="POST" class="d-inline">
+            <button class="btn btn-link nav-link" type="submit">Logout</button>
+          </form>
+        <% } %>
       </div>
     </div>
   </div>
