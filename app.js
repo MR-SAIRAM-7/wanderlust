@@ -8,10 +8,14 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 //routes
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js")
 
 
 app.engine("ejs", ejsMate);
@@ -36,6 +40,14 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
+
+// Using passport for user authentication and authorization
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
@@ -44,8 +56,10 @@ app.use((req,res,next)=>{
 
 
 //Routes
-app.use("/listings", listings);
-app.use("/listings/:id/reviews/", reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews/", reviewsRouter);
+app.use("/",userRouter)
+
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -60,9 +74,9 @@ main().then(() => {
     console.log(err)
 });
 
-app.get("/", (req, res) => {
-    res.send(`App is listening at port : ${port}`)
-})
+// app.get("/", (req, res) => {
+//     res.send(`App is listening at port : ${port}`)
+// })
 
 
 
