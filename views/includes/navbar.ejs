@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top  animate__animated animate__fadeIn">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -8,25 +8,42 @@
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="/listings">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <% if (currentUser) { %>
-          <a class="nav-link" href="/listings/new">Add New Listing</a>
-        <% } %>
+        <a class="nav-link " href="/listings">Explore</a>
+        <a class="nav-link" href="/listings/new">Add New Listing</a>
       </div>
+     
+
+
+      <!-- Modern Search Bar -->
+      <form
+        class="d-flex align-items-center justify-content-center p-3 px-2 py-1 rounded-pill shadow-sm bg-white animate__animated animate__fadeIn"
+        style="border: 1px solid #e3e3e3;">
+        <input type="text" class="form-control border-0 bg-white px-3" placeholder="Search destinations" name="location">
+        <input type="date" class="form-control border-0 bg-white px-3" placeholder="Check in" name="checkin">
+        <input type="date" class="form-control border-0 bg-white px-3" placeholder="Check out" name="checkout">
+        <input type="number" class="form-control border-0 bg-white px-3" placeholder="Guests" name="guests" min="1">
+        <button class="btn btn-danger rounded-circle d-flex justify-content-center align-items-center"
+          style="width: 40px; height: 40px;" type="submit">
+          <i class="fa fa-search text-white"></i>
+        </button>
+      </form>
+
 
       <div class="navbar-nav">
+
         <% if (!currentUser) { %>
-          <a class="nav-link" href="/login">Login</a>
-          <a class="nav-link" href="/signup">Signup</a>
-        <% } else { %>
-          <span class="navbar-text mx-2">
-            Welcome, <strong><%= currentUser.username %></strong>
-          </span>
-          <form action="/logout" method="POST" class="d-inline">
-            <button class="btn btn-link nav-link" type="submit">Logout</button>
-          </form>
-        <% } %>
+          <a class="nav-link mx-1" href="/login"><b>Login</b></a>
+          <a class="nav-link mx-1" href="/signup"><b>SignUp</b></a>
+          <% } else { %>
+            <span class="navbar-text mx-5">
+              <b>Welcome, <strong>
+                  <%= currentUser.username %>
+                </strong></b>
+            </span>
+            <form action="/logout" method="POST" class="d-inline">
+              <button class="btn btn-link nav-link" type="submit">LogOut</button>
+            </form>
+            <% } %>
       </div>
     </div>
   </div>

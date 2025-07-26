@@ -14,6 +14,8 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createListing = wrapAsync(async (req, res) => {
+    let url = req.file.path
+    let filename = req.file.filename
     const { listing } = req.body;
     const { error } = listingSchema.validate(req.body);
     if (error) {
@@ -24,6 +26,7 @@ module.exports.createListing = wrapAsync(async (req, res) => {
     }
     const newListing = new Listing(listing);
     newListing.owner = req.user._id;
+    newListing.image = { url, filename }
     await newListing.save();
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
@@ -62,6 +65,12 @@ module.exports.updateListing = wrapAsync(async (req, res) => {
         throw new ExpressError(400, error.details[0].message);
     }
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if (typeof req.file !== "undefined") {
+        let url = req.file.path
+        let filename = req.file.filename;
+        listing.image = { url, filename };
+        await listing.save();
+    }
     req.flash("success", "Listing Updated");
     res.redirect(`/listings/${id}`);
 });
